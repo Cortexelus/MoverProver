@@ -1,0 +1,17 @@
+{
+  "name": "moverprover-demux",
+  "version": "0.0.1",
+  "author": "Julien Heller",
+  "license": "MIT",
+  "dependencies": {
+    "demux": "^4.0.0",
+    "demux-eos": "^4.0.1",
+    "demux-postgres": "^4.0.1",
+    "massive": "5.7.2",
+    "node-cmd": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/massive": "^5.4.1",
+    "typescript": "^3.3.3"
+  }
+}

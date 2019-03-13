@@ -1,0 +1,28 @@
+.App {
+  text-align: center;
+}
+
+.table {
+  width: 60% !important;
+  color: #212529;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-top: 20px;
+}
+
+
+.App-header {
+  background-color: #eeeeee;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #111111;
+}
+
+.App-link {
+  color: #61dafb;
+}
+

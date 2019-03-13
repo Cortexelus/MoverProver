@@ -1,0 +1,126 @@
+const { Cleos, cmdPromisified } = require('./cleos')
+const stripAnsi = require('strip-ansi')
+const crypto = require('crypto')
+const bigInt = require("big-integer")
+const biformat = require('biguint-format')
+
+const CLEOS_PATH = 'docker exec -i eosio_notechain_container /usr/bin/cleos'
+const PASS_CMD = 'docker exec -i eosio_notechain_container /bin/cat /opt/eosio/bin/notechain_wallet_password.txt'
+
+const cleos = new Cleos(CLEOS_PATH)
+
+function wait(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
+describe('cleos functions', () => {
+  it('unlocks wallet', async () => {
+    const password = await cmdPromisified(PASS_CMD)
+    let output
+    try {
+      output = await cleos.wallet.unlock({ name: 'notechainwal', password })
+    } catch (err) {
+      const cleosError = stripAnsi(err.message.split("\n")[2])
+      return expect(cleosError).toBe("Error 3120007: Already unlocked")
+    }
+    expect(output).toBe("Unlocked: notechainwal\n")
+  })
+})
+
+describe('mvpregister Contract', () => {
+  beforeAll(async () => {
+    try {
+      await cleos.wallet.unlock({ name: 'notechainwal', password })
+    } catch (err) {
+      console.log("Wallet already open.")
+    }
+  })
+
+  it('exists', async () => {
+    const result = JSON.parse(await cleos.get.account('mvpregister', '-j'))
+    expect(result.account_name).toBe('mvpregister')
+  })
+
+  it('can register a move', async () => {
+    const moveId = bigInt(biformat(crypto.randomBytes(8), 'dec'))
+    const registerArgs = [
+      'useraaaaaaaa', // user
+      'Hokey Pokey', // movename
+      moveId, // id
+      'Julien Heller', // fullname
+      'julienheller627@gmail.com' // email
+    ]
+    const result = await cleos.push.action.mvpregister.reg(
+      JSON.stringify(registerArgs),
+      { permission: 'useraaaaaaaa@active' },
+    )
+    expect(result.startsWith('#   mvpregister <= mvpregister::reg             {"user":"useraaaaaaaa","movename":"my move","id":"')).toBe(true)
+  })
+
+  it('can list a registered move', async () => {
+    const moveId = bigInt(biformat(crypto.randomBytes(8), 'dec'))
+    const registerArgs = [
+      'useraaaaaaaa', // user
+      'Electric Slide', // movename
+      moveId, // moveid
+      'Julien Heller',
+      'julienheller627@gmail.com'
+    ]
+    await cleos.push.action.mvpregister.reg(
+      JSON.stringify(registerArgs),
+      { permission: 'useraaaaaaaa@active' },
+    )
+
+    const listArgs = [
+      'useraaaaaaaa', // user
+      moveId, // moveid
+      10000, // buyprice
+    ]
+    const result = await cleos.push.action.mvpregister.list(
+      JSON.stringify(listArgs),
+      { permission: 'useraaaaaaaa@active' },
+    )
+
+    expect(result.startsWith('asdf')).toBe(true)
+  })
+
+  it('can buy a registered move', async () => {
+    const moveId = bigInt(biformat(crypto.randomBytes(8), 'dec'))
+    const registerArgs = [
+      'useraaaaaaab', // user
+      'Jumping Johns', // movename
+      moveId, // moveid
+      'John McJumper',
+      'EmCeeJumper@gmail.com'
+    ]
+    await cleos.push.action.mvpregister.reg(
+      JSON.stringify(registerArgs),
+      { permission: 'useraaaaaaab@active' },
+    )
+
+    const listArgs = [
+      'useraaaaaaab', // user
+      moveId, // moveid
+      1000, // buyprice
+    ]
+    await cleos.push.action.mvpregister.list(
+      JSON.stringify(listArgs),
+      { permission: 'useraaaaaaab@active' },
+    )
+
+    await wait(300)
+
+    const buyArgs = [
+      'useraaaaaaaa', // user
+      moveId, // moveid
+    ]
+    const result = await cleos.push.action.mvpregister.buy(
+      JSON.stringify(buyArgs),
+      { permission: 'useraaaaaaaa@active' }
+    )
+    expect(result).toBe("asdf")
+
+  })
+})

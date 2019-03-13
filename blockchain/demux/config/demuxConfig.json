@@ -1,0 +1,7 @@
+{
+  "startAtBlock": 1,
+  "onlyIrreversible": false,
+  "pollInterval": 250,
+  "endpointPort": 8282,
+  "nodeosEndpoint": "http://localhost:8888"
+}

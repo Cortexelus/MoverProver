@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PoseNet - Camera Feed Demo</title>
+    <style>.footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        color: white;
+    }
+
+    .footer-text {
+        max-width: 600px;
+        text-align: center;
+        margin: auto;
+    }
+    .button{
+        
+        padding: 20px;
+        border-radius: 7px;
+        user-select: none;
+        opacity: 0.8;
+        cursor: pointer;
+    }
+    .button.start{
+      background-color: rgb(0, 168, 20);
+    }
+    .button.record{
+      background-color: rgb(250, 0, 0);
+    }
+    .button.stop{
+      background-color: rgb(100,100,100);
+    }
+    .button.finish{
+      background-color: rgb(213, 140, 34)
+    }
+    .button:hover{
+      opacity:1.0;
+    }
+    .footer-text div{
+
+        margin: 4px;
+        display: none;
+    }
+    input{
+      width: 94%;
+      border: 1px dashed #999;
+      padding: 12px;
+      background-color: #555;
+      color: white;
+      font-size: 27px;
+    }
+    body{
+      margin:0px;
+      padding:0px;
+      background-color: black;
+      color: white; 
+      font-family: Helvetica;
+    }
+    @media only screen and (max-width: 600px) {
+      .footer-text, .dg {
+        display: none;
+      }
+    }
+    .status{
+      height:50px;
+      display: block;
+      color: #9b9b9b;
+    }
+    #classification{
+      position: absolute;
+      left:50%;
+      top:0px;
+      background-color: black;
+      padding: 5px;
+    }
+    .class-row{
+
+    }
+    .class-name{
+      background-color: #777;
+      color: white;
+    }
+    .class-confidence{
+      background-color: #777;
+      color: #bbb
+    }
+
+    .class-name2{
+      color: white;
+      font-weight: bold;
+    }
+    .class-confidence2{
+      color: #555
+    }
+    #hammer{
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      display: none;
+    }
+    #hammer .hammer-inner{
+      width: calc(100% - 200px);
+      /*height: calc(100% - 200px);*/
+      background-color: black;
+      margin: 100px;
+    }
+    .hammer-mvp-button{
+      padding: 20px;
+      border-radius: 7px;
+      user-select: none;
+      opacity: 0.8;
+      cursor: pointer;
+      background-color: rgb(0, 168, 20);
+      clear: both;
+      text-align: center;
+    }</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div id="info" style="display:none">
+    </div>
+    <div id="loading">
+        Loading the model...
+    </div>
+
+    <div id="main" style="display:none">
+        <video id="video" playsinline="" style=" -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        display: none;
+        ">
+        </video>
+        <canvas id="output" style="
+          width: calc(50% - 3px);
+        "></canvas>
+        <canvas id="output_normalized" style="
+          width: calc(50% - 3px);
+        "></canvas>
+        <div id="classification">
+
+        </div>
+
+    </div>
+    <div class="footer">
+        <div class="footer-text">
+          <div id="start-button" class="button start">START SESSION</div>
+          <div id="finish-button" class="button finish">FINISH SESSION</div>
+          <div id="record-button" class="button record">RECORD </div>
+          <div id="dont-keep-button" class="button stop">DONT KEEP</div>
+          <div id="keep-button" class="button start">KEEP</div>
+          <div id="email-input"><input type="text" id="email" placeholder="your email.."></div>
+          <div id="username-input"><input type="text" id="usename" placeholder="your name.."></div>
+          <div id="movename-input"><input type="text" id="movename" placeholder="name your move.."></div>
+          <div id="next-button" class="button finish">NEXT...</div>
+          <div id="submit-button" class="button start">SUBMIT</div>
+          <span id="status" class="status"></span>
+
+        </div>
+    </div>
+    <div id="hammer">
+      <div class="hammer-inner" style="border:3px solid #ca0303">
+        <div style="padding:5px;font-size:32px;background-color:#ca0303;text-align:center">SORRY, THIS MOVE IS COPYRIGHTED</div>
+        <img align="left" src="http://localhost:1234/hammer/0001007856_350.jpg" style="width: 200px; margin:10px">
+          <div style="margin:5px">
+            <div style="padding:5px;font-size:32px"> U Can't Touch This</div>        
+            <img src="http://localhost:1234/hammer/7digital.gif" align="right" style="border-radius:5px;width:60px;opacity:0.8">
+            <div style="padding:5px;font-size:20px;font-weight:bold"> MC HAMMER</div>
+            <div style="color:#999"> Record Label Capitol Records</div>
+            <div style="color:#999"> Copyright Date 07/10/1985</div>
+
+            <div id="hammer-mvp" class="hammer-mvp-button">BUY FOR 400000 MVP</div>
+
+        </div>
+      </div>
+    </div>
+    <script src="/camera.283d5d54.js"></script>
+</body>
+
+</html>

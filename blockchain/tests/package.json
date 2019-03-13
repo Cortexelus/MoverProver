@@ -1,0 +1,24 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^24.4.0",
+    "node-cmd": "^3.0.0",
+    "strip-ansi": "^5.1.0",
+    "big-integer": "^1.6.42",
+    "biguint-format": "^1.0.1"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "js.test"
+    ],
+    "testRegex": "^.*\\.js.test$",
+    "testEnvironment": "node"
+  },
+  "scripts": {
+    "test": "jest"
+  }
+}
